@@ -10,11 +10,18 @@ public class Casilla
 
     public enum Valor
     {
-        EQUIS, CIRCULO, TRIAGULO, ESTRELLA, BLANCO
+        EQUIS, CIRCULO, TRIAGULO, ESTRELLA
     }
 
     private Estado estado;
     private Valor valor;
+
+
+    public Casilla()
+    {
+        estado = null;
+        valor = null;
+    }
 
     public Estado getEstado()
     {
@@ -57,8 +64,7 @@ public class Casilla
                 break;
             case ESTRELLA:
                 valor = Valor.ESTRELLA;
-            case BLANCO:
-                valor = Valor.BLANCO;
+                break;
         }
     }
 

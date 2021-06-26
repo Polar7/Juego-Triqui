@@ -3,6 +3,7 @@ package modelo;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Properties;
 
 public class Triqui
@@ -28,13 +29,40 @@ public class Triqui
 
     private long tiempoFinal;
 
+    private ArrayList<Jugador> jugadores;
+
     public Triqui()
     {
         filas = 0;
         columnas = 0;
-
+        jugadores = new ArrayList<Jugador>();
     }
 
+    public Casilla[][] getCasillasTableroTriqui() {
+        return casillasTableroTriqui;
+    }
+
+    public int getColumnas() {
+        return columnas;
+    }
+
+    public int getFilas() {
+        return filas;
+    }
+
+    public ArrayList<Jugador> getJugadores()
+    {
+        return jugadores;
+    }
+
+
+    public void añadirJugadores(String pNombreJugador1, String pFiguraJugador1, String pNombreJugador2, String pFiguraJugador2)
+    {
+        Jugador jugador1 = new Jugador(pNombreJugador1, pFiguraJugador1);
+        jugadores.add(jugador1);
+        Jugador jugador2 = new Jugador(pNombreJugador1, pFiguraJugador1);
+        jugadores.add(jugador2);
+    }
     public boolean verificarSiHayGanador (Casilla.Valor pValor)
     {
         boolean centinela = false;
@@ -53,6 +81,54 @@ public class Triqui
         }
        return centinela;
     }
+
+
+    public void cargarTablero(File pArchivoTablero) throws Exception
+    {
+
+        Properties propiedadesTriqui = new Properties( );
+        InputStream inputLetras = new FileInputStream( pArchivoTablero );
+        propiedadesTriqui.load( inputLetras );
+
+        filas = Integer.parseInt( propiedadesTriqui.getProperty( "triqui.filas" ) );
+        columnas = Integer.parseInt( propiedadesTriqui.getProperty( "triqui.columnas" ) );
+
+        casillasTableroTriqui = new Casilla[filas][columnas];
+
+        for( int i = 0; i < filas; i++ )
+        {
+            for( int j = 0; j < columnas; j++ )
+            {
+                casillasTableroTriqui[ i ][ j ] = new Casilla();
+                casillasTableroTriqui[ i ][ j ].setEstado(Casilla.Estado.VACIA);
+            }
+        }
+    }
+
+    public void marcarCasilla (int pPosFila, int pPosColumna)
+    {
+       // casillasTableroTriqui[pPosFila][pPosColumna].setValor();
+    }
+
+    public int darTurnoActual()
+    {
+        if( jugadores.get(0).isEsSuTurno())
+        {
+            return 0;
+        }else
+        {
+            return 1;
+        }
+    }
+
+    public String cadenaAcercaDe()
+    {
+        String mensaje = "Juego creado por:\n" + " Jean Michael Lozano Cardoso";
+
+        return mensaje;
+    }
+
+
 
     private boolean verificarPorFila (Casilla.Valor pValor)
     {
@@ -126,33 +202,5 @@ public class Triqui
         }
 
         return centinela;
-    }
-
-
-    public void marcarCasilla (Casilla.Valor pValor)
-    {
-
-    }
-
-    public void cargarTablero(File pArchivoTablero) throws Exception
-    {
-
-        Properties propiedadesTriqui = new Properties( );
-        InputStream inputLetras = new FileInputStream( pArchivoTablero );
-        propiedadesTriqui.load( inputLetras );
-
-        filas = Integer.parseInt( propiedadesTriqui.getProperty( "triqui.filas" ) );
-        columnas = Integer.parseInt( propiedadesTriqui.getProperty( "triqui.columnas" ) );
-
-        casillasTableroTriqui = new Casilla[filas][columnas];
-
-        for( int i = 1; i <= filas; i++ )
-        {
-            for( int j = 1; j <= columnas; j++ )
-            {
-                casillasTableroTriqui[ i ][ j ].setEstado(Casilla.Estado.VACIA);
-                //casillasTableroTriqui[ i ][ j ].cambiarValor(Casilla.Valor.BLANCO);
-            }
-        }
     }
 }

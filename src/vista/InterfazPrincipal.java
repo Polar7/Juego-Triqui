@@ -8,37 +8,73 @@ public class InterfazPrincipal extends JFrame
     private PanelBanner panelBanner;
     private PanelOpciones panelOpciones;
     private PanelTablero panelTablero;
+    private PanelInformacion panelInformacion;
+    private DialogoJugador dialogoJugador;
 
     public InterfazPrincipal ()
     {
         setTitle( "Triqui" );
-        setSize( 550, 700 );
+        setSize( 900, 700 );
         setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
         setResizable( true );
         setLocationRelativeTo( null );
         setLayout(new BorderLayout());
 
-        panelBanner = new PanelBanner();
-        panelOpciones = new PanelOpciones();
-        panelTablero = new PanelTablero();
-
-        add(panelBanner, BorderLayout.NORTH);
-        add(panelTablero, BorderLayout.CENTER);
-        add(panelOpciones, BorderLayout.SOUTH);
-    }
-
-    public static void main(String [] args)
-    {
-        try
-        {
+        try {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-
-            InterfazPrincipal ui = new InterfazPrincipal();
-            ui.setVisible(true);
-        }
-        catch( Exception e )
+        }catch( Exception e )
         {
             e.printStackTrace( );
         }
+
+        panelBanner = new PanelBanner();
+        panelOpciones = new PanelOpciones();
+        panelTablero = new PanelTablero();
+        panelInformacion = new PanelInformacion();
+        dialogoJugador = new DialogoJugador();
+
+
+        add(panelBanner, BorderLayout.NORTH);
+        add(panelTablero, BorderLayout.CENTER);
+        add(panelInformacion, BorderLayout.WEST);
+        add(panelOpciones, BorderLayout.SOUTH);
+
+        setVisible(true);
+    }
+
+    public PanelBanner getPanelBanner() {
+        return panelBanner;
+    }
+
+    public PanelOpciones getPanelOpciones() {
+        return panelOpciones;
+    }
+
+    public PanelTablero getPanelTablero() {
+        return panelTablero;
+    }
+
+    public PanelInformacion getPanelInformacion()
+    {
+        return panelInformacion;
+    }
+
+    public DialogoJugador getDialogoJugador ()
+    {
+        return dialogoJugador;
+    }
+
+    public JFileChooser escogerArchivo()
+    {
+        JFileChooser fileChooser = new JFileChooser("./data");
+        fileChooser.setDialogTitle("Seleccionar archivo");
+        fileChooser.showOpenDialog(null);
+
+        return fileChooser;
+    }
+
+    public void ventanaInformacion(String pMensaje)
+    {
+        JOptionPane.showMessageDialog(null, pMensaje, "Cargar tablero", JOptionPane.ERROR_MESSAGE);
     }
 }
