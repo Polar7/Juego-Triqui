@@ -98,9 +98,11 @@ public class ControladorPrincipal
     {
         interfazPrincipal.getPanelTablero().limpiarTablero();
         interfazPrincipal.getPanelInformacion().getTxtGanador().setText("");
+        interfazPrincipal.getPanelInformacion().getTxtTiempo().setText("");
         interfazPrincipal.getPanelInformacion().cambiarTurno(0);
         interfazPrincipal.getPanelOpciones().getBtnGuardarResultado().setEnabled(false);
         triqui.limpiarTablero();
+
     }
 
     public void marcarCasillaControlador(int posFila, int posColumna)
@@ -114,6 +116,7 @@ public class ControladorPrincipal
             interfazPrincipal.getPanelInformacion().getTxtGanador().setText(triqui.darNombreGanador());
             pintarCasillasLineaCompletadaControlador();
             interfazPrincipal.getPanelOpciones().getBtnGuardarResultado().setEnabled(true);
+            interfazPrincipal.getPanelInformacion().getTxtTiempo().setText(triqui.darTiempoTotal()+" segundos");
         }
         else
         {

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Properties;
 
 public class Triqui
@@ -63,6 +64,24 @@ public class Triqui
         return juegoTerminado;
     }
 
+    private void calcularTiempoDeJuego( )
+    {
+        if( tiempoInicio == 0 )
+        {
+            tiempoInicio = ( new Date( ) ).getTime( );
+        }
+        tiempoFinal = ( new Date( ) ).getTime( );
+    }
+
+    public int darTiempoTotal( )
+    {
+        int tiempo = 0;
+        if( tiempoInicio != 0 )
+        {
+            tiempo = ( int ) ( ( tiempoFinal - tiempoInicio ) / 1000 );
+        }
+        return tiempo+2;
+    }
 
     public void añadirJugadores(String pNombreJugador1, String pFiguraJugador1, String pNombreJugador2, String pFiguraJugador2)
     {
@@ -124,7 +143,7 @@ public class Triqui
                 casillasTableroTriqui[ i ][ j ].setEstado(Casilla.Estado.VACIA);
             }
         }
-
+        tiempoInicio = 0;
         juegoTerminado = false;
     }
 
@@ -140,6 +159,7 @@ public class Triqui
                 casillasTableroTriqui[ pPosFila ][ pPosColumna ].setEstado(Casilla.Estado.OCUPADA);
 
                 figuraCasilla = jugadores.get(0).getCadenaFigura();
+                calcularTiempoDeJuego();
 
                 if(verificarSiHayGanador(jugadores.get(0).getFigura()) )
                 {
@@ -157,7 +177,7 @@ public class Triqui
 
 
             figuraCasilla = jugadores.get(1).getCadenaFigura();
-
+            calcularTiempoDeJuego();
             if(verificarSiHayGanador(jugadores.get(1).getFigura()) )
             {
                 juegoTerminado = true;
@@ -215,6 +235,7 @@ public class Triqui
         }
 
         juegoTerminado = false;
+        tiempoInicio = 0;
 
         jugadores.get(0).setEsGanador(false);
         jugadores.get(1).setEsGanador(false);

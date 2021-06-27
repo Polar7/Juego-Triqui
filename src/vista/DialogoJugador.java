@@ -28,7 +28,7 @@ public class DialogoJugador extends JDialog implements ActionListener
         setLocationRelativeTo( null );
         setLayout(new GridLayout(3,3));
 
-        String figuras[] = { "EQUIS", "CIRCULO", "TRIANGULO", "ESTRELLA"};
+        String figuras[] = { "EQUIS", "CIRCULO", "TRIANGULO"};
 
         jTxtNombreJugador1 = new JTextField();
         jComboBoxFigurasJugador1 = new JComboBox<String>(figuras);
