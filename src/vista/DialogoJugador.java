@@ -78,7 +78,7 @@ public class DialogoJugador extends JDialog implements ActionListener
         if(e.getActionCommand().equals(ACEPTAR))
         {
             ControladorPrincipal.getInstance().configurarJugadores(jTxtNombreJugador1.getText(), jComboBoxFigurasJugador1.getSelectedItem().toString(), jTxtNombreJugador2.getText(),jComboBoxFigurasJugador2.getSelectedItem().toString() );
-            dispose();
+
         } else if (e.getActionCommand().equals(CANCELAR))
         {
             dispose();

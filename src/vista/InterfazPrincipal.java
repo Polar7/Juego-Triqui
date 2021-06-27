@@ -73,8 +73,13 @@ public class InterfazPrincipal extends JFrame
         return fileChooser;
     }
 
-    public void ventanaInformacion(String pMensaje)
+    public void ventanaInformacionError(String pMensaje)
     {
-        JOptionPane.showMessageDialog(null, pMensaje, "Cargar tablero", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, pMensaje, "Cargar juego", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void mostrarAcercaDe(String pMensaje)
+    {
+        JOptionPane.showMessageDialog(null, pMensaje, "Acerca de", JOptionPane.INFORMATION_MESSAGE);
     }
 }

@@ -24,6 +24,8 @@ public class Triqui
     private EstadoJuego estadoJuego;
 
 
+    private boolean juegoTerminado;
+
     private long tiempoInicio;
 
 
@@ -36,6 +38,7 @@ public class Triqui
         filas = 0;
         columnas = 0;
         jugadores = new ArrayList<Jugador>();
+        juegoTerminado = false;
     }
 
     public Casilla[][] getCasillasTableroTriqui() {
@@ -55,30 +58,48 @@ public class Triqui
         return jugadores;
     }
 
+    public boolean getJuegoTerminado()
+    {
+        return juegoTerminado;
+    }
+
 
     public void añadirJugadores(String pNombreJugador1, String pFiguraJugador1, String pNombreJugador2, String pFiguraJugador2)
     {
+        jugadores.removeAll(jugadores);
         Jugador jugador1 = new Jugador(pNombreJugador1, pFiguraJugador1);
         jugadores.add(jugador1);
-        Jugador jugador2 = new Jugador(pNombreJugador1, pFiguraJugador1);
+        Jugador jugador2 = new Jugador(pNombreJugador2, pFiguraJugador2);
         jugadores.add(jugador2);
+
+        jugador1.setEsSuTurno(true);
+
+        jugador1.asignarFigura(pFiguraJugador1);
+        jugador2.asignarFigura(pFiguraJugador2);
     }
-    public boolean verificarSiHayGanador (Casilla.Valor pValor)
+
+
+    public boolean verificarSiHayGanador (Casilla.Figura pFigura)
     {
         boolean centinela = false;
 
-        if(verificarPorFila(pValor))
+        if(verificarPorFila(pFigura))
         {
             centinela = true;
         }
-        else if (verificarPorColumna(pValor))
+        else if (verificarPorColumna(pFigura))
         {
             centinela = true;
         }
-        else if (verificarPorDiagonal(pValor))
+        else if (verificarPorDiagonalPrincipal(pFigura))
         {
             centinela = true;
         }
+        else if (verificarPorDiagonalInvertida(pFigura))
+        {
+            centinela = true;
+        }
+
        return centinela;
     }
 
@@ -103,51 +124,152 @@ public class Triqui
                 casillasTableroTriqui[ i ][ j ].setEstado(Casilla.Estado.VACIA);
             }
         }
+
+        juegoTerminado = false;
     }
 
-    public void marcarCasilla (int pPosFila, int pPosColumna)
+    public String marcarCasilla (int pPosFila, int pPosColumna)
     {
-       // casillasTableroTriqui[pPosFila][pPosColumna].setValor();
+        String figuraCasilla = "";
+
+        if(darTurnoActual() == 0)
+        {
+            if(casillasTableroTriqui[ pPosFila ][ pPosColumna ].getEstado() == Casilla.Estado.VACIA)
+            {
+                casillasTableroTriqui[pPosFila][pPosColumna].setValor(jugadores.get(0).getFigura());
+                casillasTableroTriqui[ pPosFila ][ pPosColumna ].setEstado(Casilla.Estado.OCUPADA);
+
+                figuraCasilla = jugadores.get(0).getCadenaFigura();
+
+                if(verificarSiHayGanador(jugadores.get(0).getFigura()) )
+                {
+                    juegoTerminado = true;
+                    jugadores.get(0).setEsGanador(true);
+                }
+            }
+
+
+
+        } else
+        {
+            casillasTableroTriqui[pPosFila][pPosColumna].setValor(jugadores.get(1).getFigura());
+
+
+
+            figuraCasilla = jugadores.get(1).getCadenaFigura();
+
+            if(verificarSiHayGanador(jugadores.get(1).getFigura()) )
+            {
+                juegoTerminado = true;
+                jugadores.get(1).setEsGanador(true);
+            }
+        }
+
+
+        cambiarTurno();
+
+        return figuraCasilla;
     }
 
     public int darTurnoActual()
     {
+        int centinela = 0;
+
         if( jugadores.get(0).isEsSuTurno())
         {
-            return 0;
-        }else
+            centinela = 0;
+
+        }else if(jugadores.get(1).isEsSuTurno())
         {
-            return 1;
+            centinela = 1;
         }
+
+        return centinela;
+    }
+
+    public void cambiarTurno()
+    {
+        if( jugadores.get(0).isEsSuTurno())
+        {
+            jugadores.get(0).setEsSuTurno(false);
+            jugadores.get(1).setEsSuTurno(true);
+        }
+        else if( jugadores.get(1).isEsSuTurno() )
+        {
+            jugadores.get(1).setEsSuTurno(false);
+            jugadores.get(0).setEsSuTurno(true);
+        }
+    }
+
+    public void limpiarTablero()
+    {
+        casillasTableroTriqui = new Casilla[filas][columnas];
+
+        for( int i = 0; i < filas; i++ )
+        {
+            for( int j = 0; j < columnas; j++ )
+            {
+                casillasTableroTriqui[ i ][ j ] = new Casilla();
+                casillasTableroTriqui[ i ][ j ].setEstado(Casilla.Estado.VACIA);
+            }
+        }
+
+        juegoTerminado = false;
+
+        jugadores.get(0).setEsGanador(false);
+        jugadores.get(1).setEsGanador(false);
+        jugadores.get(0).setEsSuTurno(true);
+        jugadores.get(1).setEsSuTurno(false);
+    }
+
+    public String darNombreGanador()
+    {
+        String cadena = "";
+
+        if(jugadores.get(0).isEsGanador())
+        {
+            cadena = jugadores.get(0).getNombre();
+        }
+        else if( jugadores.get(1).isEsGanador() )
+        {
+            cadena = jugadores.get(1).getNombre();
+        }
+        return cadena;
     }
 
     public String cadenaAcercaDe()
     {
-        String mensaje = "Juego creado por:\n" + " Jean Michael Lozano Cardoso";
+        String mensaje = "Juego creado por:\n" + "Jean Michael Lozano Cardoso";
 
         return mensaje;
     }
 
 
 
-    private boolean verificarPorFila (Casilla.Valor pValor)
+    private boolean verificarPorFila (Casilla.Figura pFigura)
     {
         boolean centinela = false;
 
-        for( int i = 1; i <= filas; i++ )
+        for( int i = 0; i < filas; i++ )
         {
-            for( int j = 1; j <= columnas - 2 ; j++ )
+            for( int j = 0; j < columnas - 2 ; j++ )
             {
-                if (casillasTableroTriqui[ i ][ j ].getValor() == pValor &&
-                        casillasTableroTriqui[ i ][ j+1 ].getValor() == pValor &&
-                        casillasTableroTriqui[ i ][ j+2 ].getValor() == pValor)
+                if(casillasTableroTriqui[ i ][ j ].getValor() != null &&
+                        casillasTableroTriqui[ i ][ j+1 ].getValor() != null &&
+                        casillasTableroTriqui[ i ][ j+2 ].getValor() != null)
                 {
-                    centinela = true;
-                    casillasTableroTriqui[ i ][ j ].setEstado(Casilla.Estado.LINEACOMPLETADA);
-                    casillasTableroTriqui[ i ][ j+1 ].setEstado(Casilla.Estado.LINEACOMPLETADA);
-                    casillasTableroTriqui[ i ][ j+2 ].setEstado(Casilla.Estado.LINEACOMPLETADA);
-                    break;
+                    if (casillasTableroTriqui[ i ][ j ].getValor() == pFigura &&
+                            casillasTableroTriqui[ i ][ j+1 ].getValor() == pFigura &&
+                            casillasTableroTriqui[ i ][ j+2 ].getValor() == pFigura)
+                    {
+                        centinela = true;
+                        casillasTableroTriqui[ i ][ j ].setEstado(Casilla.Estado.LINEACOMPLETADA);
+                        casillasTableroTriqui[ i ][ j+1 ].setEstado(Casilla.Estado.LINEACOMPLETADA);
+                        casillasTableroTriqui[ i ][ j+2 ].setEstado(Casilla.Estado.LINEACOMPLETADA);
+                        break;
+                    }
                 }
+
 
             }
         }
@@ -155,24 +277,30 @@ public class Triqui
         return centinela;
     }
 
-    private boolean verificarPorColumna (Casilla.Valor pValor)
+    private boolean verificarPorColumna (Casilla.Figura pFigura)
     {
         boolean centinela = false;
 
-        for( int j = 1; j <= columnas; j++ )
+        for( int j = 0; j < columnas; j++ )
         {
-            for( int i = 1; i <= filas - 2 ; i++ )
+            for( int i = 0; i < filas - 2 ; i++ )
             {
-                if (casillasTableroTriqui[ j ][ i ].getValor() == pValor &&
-                        casillasTableroTriqui[ j ][ i+1 ].getValor() == pValor &&
-                        casillasTableroTriqui[ j ][ i+2 ].getValor() == pValor)
+                if (casillasTableroTriqui[ i ][ j ].getValor() != null &&
+                        casillasTableroTriqui[ i+1 ][ j ].getValor() != null &&
+                        casillasTableroTriqui[ i+2 ][ j ].getValor() != null)
                 {
-                    centinela = true;
-                    casillasTableroTriqui[ j ][ i ].setEstado(Casilla.Estado.LINEACOMPLETADA);
-                    casillasTableroTriqui[ j ][ i+1 ].setEstado(Casilla.Estado.LINEACOMPLETADA);
-                    casillasTableroTriqui[ j ][ i+2 ].setEstado(Casilla.Estado.LINEACOMPLETADA);
-                    break;
+                    if (casillasTableroTriqui[ i ][ j ].getValor() == pFigura &&
+                            casillasTableroTriqui[ i+1 ][ j ].getValor() == pFigura &&
+                            casillasTableroTriqui[ i+2 ][ j ].getValor() == pFigura)
+                    {
+                        centinela = true;
+                        casillasTableroTriqui[ i ][ j ].setEstado(Casilla.Estado.LINEACOMPLETADA);
+                        casillasTableroTriqui[ i+1 ][ j ].setEstado(Casilla.Estado.LINEACOMPLETADA);
+                        casillasTableroTriqui[ i+2 ][ j ].setEstado(Casilla.Estado.LINEACOMPLETADA);
+                        break;
+                    }
                 }
+
 
             }
         }
@@ -180,22 +308,51 @@ public class Triqui
         return centinela;
     }
 
-    private boolean verificarPorDiagonal(Casilla.Valor pValor)
+    private boolean verificarPorDiagonalPrincipal(Casilla.Figura pFigura)
     {
         boolean centinela = false;
 
-        for( int i = 1; i <= filas; i++ )
+        for( int i = 0; i < filas - 2; i++ )
         {
-            for( int j = 1; j <= columnas - 2 ; j++ )
+            for( int j = 0; j < columnas - 2 ; j++ )
             {
-                if(casillasTableroTriqui[ i ][ j ].getValor() == pValor &&
-                        casillasTableroTriqui[ i+1 ][ j+1 ].getValor() == pValor &&
-                        casillasTableroTriqui[ i+2 ][ j+2 ].getValor() == pValor)
+                if(casillasTableroTriqui[ i ][ j ].getValor() != null &&
+                        casillasTableroTriqui[ i+1 ][ j+1 ].getValor() != null &&
+                        casillasTableroTriqui[ i+2 ][ j+2 ].getValor() != null)
+                {
+                    if(casillasTableroTriqui[ i ][ j ].getValor() == pFigura &&
+                            casillasTableroTriqui[ i+1 ][ j+1 ].getValor() == pFigura &&
+                            casillasTableroTriqui[ i+2 ][ j+2 ].getValor() == pFigura)
+                    {
+                        centinela = true;
+                        casillasTableroTriqui[ i ][ j ].setEstado(Casilla.Estado.LINEACOMPLETADA);
+                        casillasTableroTriqui[ i+1 ][ j+1 ].setEstado(Casilla.Estado.LINEACOMPLETADA);
+                        casillasTableroTriqui[ i+2 ][ j+2 ].setEstado(Casilla.Estado.LINEACOMPLETADA);
+                        break;
+                    }
+                }
+            }
+        }
+
+        return centinela;
+    }
+
+    private boolean verificarPorDiagonalInvertida(Casilla.Figura pFigura)
+    {
+        boolean centinela = false;
+
+        for( int i = 0; i < filas - 2; i++ )
+        {
+            for( int j = columnas - 1; j >= 2 ; j-- )
+            {
+                if(casillasTableroTriqui[ i ][ j ].getValor() == pFigura &&
+                        casillasTableroTriqui[ i+1 ][ j-1 ].getValor() == pFigura &&
+                        casillasTableroTriqui[ i+2 ][ j-2 ].getValor() == pFigura)
                 {
                     centinela = true;
                     casillasTableroTriqui[ i ][ j ].setEstado(Casilla.Estado.LINEACOMPLETADA);
-                    casillasTableroTriqui[ i+1 ][ j+1 ].setEstado(Casilla.Estado.LINEACOMPLETADA);
-                    casillasTableroTriqui[ i+2 ][ j+2 ].setEstado(Casilla.Estado.LINEACOMPLETADA);
+                    casillasTableroTriqui[ i+1 ][ j-1 ].setEstado(Casilla.Estado.LINEACOMPLETADA);
+                    casillasTableroTriqui[ i+2 ][ j-2 ].setEstado(Casilla.Estado.LINEACOMPLETADA);
                     break;
                 }
             }

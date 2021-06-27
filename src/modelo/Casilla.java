@@ -8,19 +8,19 @@ public class Casilla
         VACIA, OCUPADA, LINEACOMPLETADA
     }
 
-    public enum Valor
+    public enum Figura
     {
-        EQUIS, CIRCULO, TRIAGULO, ESTRELLA
+        EQUIS, CIRCULO, TRIANGULO, ESTRELLA
     }
 
     private Estado estado;
-    private Valor valor;
+    private Figura figura;
 
 
     public Casilla()
     {
         estado = null;
-        valor = null;
+        figura = null;
     }
 
     public Estado getEstado()
@@ -28,9 +28,9 @@ public class Casilla
         return estado;
     }
 
-    public Valor getValor()
+    public Figura getValor()
     {
-        return valor;
+        return figura;
     }
 
     public void setEstado (Estado pEstado)
@@ -49,21 +49,21 @@ public class Casilla
         }
     }
 
-    public void setValor (Valor pValor)
+    public void setValor (Figura pFigura)
     {
-        switch (pValor)
+        switch (pFigura)
         {
             case EQUIS:
-                valor = Valor.EQUIS;
+                figura = Figura.EQUIS;
                 break;
             case CIRCULO:
-                valor = Valor.CIRCULO;
+                figura = Figura.CIRCULO;
                 break;
-            case TRIAGULO:
-                valor = Valor.TRIAGULO;
+            case TRIANGULO:
+                figura = Figura.TRIANGULO;
                 break;
             case ESTRELLA:
-                valor = Valor.ESTRELLA;
+                figura = Figura.ESTRELLA;
                 break;
         }
     }

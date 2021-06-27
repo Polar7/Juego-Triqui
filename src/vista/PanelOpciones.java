@@ -16,18 +16,21 @@ public class PanelOpciones extends JPanel implements ActionListener
 
     private static final String NUEVO_JUEGO = "Nuevo juego";
 
-    private JButton btnNuevoJuego, btnGuardarResultado, btnAcercaDe;
+    private static final String REINICIAR_JUEGO = "Reiniciar juego";
+
+    private JButton btnNuevoJuego, btnReiniciarJuego, btnGuardarResultado, btnAcercaDe;
 
     public PanelOpciones ()
     {
 
         setBorder(BorderFactory.createTitledBorder("Opciones"));
-        setLayout(new GridLayout(1,3));
+        setLayout(new GridLayout(1,4));
 
 
         btnNuevoJuego = new JButton("Nueva Partida");
         btnGuardarResultado = new JButton("Guardar Resultado");
         btnAcercaDe = new JButton("Acerca de");
+        btnReiniciarJuego = new JButton("Reiniciar partida actual");
 
         btnAcercaDe.setActionCommand(ACERCA_DE);
         btnAcercaDe.addActionListener(this);
@@ -35,8 +38,14 @@ public class PanelOpciones extends JPanel implements ActionListener
         btnGuardarResultado.addActionListener(this);
         btnNuevoJuego.setActionCommand(NUEVO_JUEGO);
         btnNuevoJuego.addActionListener(this);
+        btnReiniciarJuego.setActionCommand(REINICIAR_JUEGO);
+        btnReiniciarJuego.addActionListener(this);
+
+        btnGuardarResultado.setEnabled(false);
+        btnReiniciarJuego.setEnabled(false);
 
         add(btnNuevoJuego);
+        add(btnReiniciarJuego);
         add(btnGuardarResultado);
         add(btnAcercaDe);
     }
@@ -53,10 +62,11 @@ public class PanelOpciones extends JPanel implements ActionListener
         return btnAcercaDe;
     }
 
-    public void mostrarAcercaDe(String pMensaje)
-    {
-        JOptionPane.showMessageDialog(null, pMensaje, "Acerca de", JOptionPane.INFORMATION_MESSAGE);
+    public JButton getBtnReiniciarJuego(){
+        return btnReiniciarJuego;
     }
+
+
 
     @Override
     public void actionPerformed(ActionEvent e)
@@ -72,6 +82,9 @@ public class PanelOpciones extends JPanel implements ActionListener
                 break;
             case NUEVO_JUEGO:
                 ControladorPrincipal.getInstance().nuevoJuegoControlador();
+                break;
+            case REINICIAR_JUEGO:
+                ControladorPrincipal.getInstance().reiniciarJuegoControlador();
                 break;
         }
 
