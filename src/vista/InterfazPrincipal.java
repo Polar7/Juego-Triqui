@@ -16,7 +16,7 @@ public class InterfazPrincipal extends JFrame
         setTitle( "Triqui" );
         setSize( 900, 700 );
         setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
-        setResizable( true );
+        setResizable( false );
         setLocationRelativeTo( null );
         setLayout(new BorderLayout());
 

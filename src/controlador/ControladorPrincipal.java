@@ -4,6 +4,7 @@ import modelo.Casilla;
 import modelo.Triqui;
 import vista.InterfazPrincipal;
 
+import java.awt.*;
 import java.io.File;
 
 public class ControladorPrincipal
@@ -54,7 +55,12 @@ public class ControladorPrincipal
             {
                 triqui.cargarTablero(archivo);
                 interfazPrincipal.getPanelTablero().crearTablero(triqui.getFilas(), triqui.getColumnas());
-
+                interfazPrincipal.getPanelOpciones().getBtnGuardarResultado().setEnabled(false);
+                interfazPrincipal.getPanelInformacion().getTxtGanador().setText("");
+                interfazPrincipal.getPanelInformacion().getTxtNombreJugador1().setText("");
+                interfazPrincipal.getPanelInformacion().getTxtNombreJugador2().setText("");
+                interfazPrincipal.getPanelInformacion().getTxtNombreJugador1().setBackground(Color.WHITE);
+                interfazPrincipal.getPanelInformacion().getTxtNombreJugador2().setBackground(Color.WHITE);
                 interfazPrincipal.getDialogoJugador().setVisible(true);
 
             } catch(Exception e)
@@ -75,6 +81,7 @@ public class ControladorPrincipal
         interfazPrincipal.getPanelTablero().limpiarTablero();
         interfazPrincipal.getPanelInformacion().getTxtGanador().setText("");
         interfazPrincipal.getPanelInformacion().cambiarTurno(0);
+        interfazPrincipal.getPanelOpciones().getBtnGuardarResultado().setEnabled(false);
         triqui.limpiarTablero();
     }
 
@@ -88,6 +95,7 @@ public class ControladorPrincipal
             interfazPrincipal.getPanelTablero().activarTablero(false);
             interfazPrincipal.getPanelInformacion().getTxtGanador().setText(triqui.darNombreGanador());
             pintarCasillasLineaCompletadaControlador();
+            interfazPrincipal.getPanelOpciones().getBtnGuardarResultado().setEnabled(true);
         }
         else
         {
