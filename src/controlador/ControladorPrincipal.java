@@ -1,7 +1,6 @@
 package controlador;
 
-import modelo.Casilla;
-import modelo.Triqui;
+import modelo.*;
 import vista.InterfazPrincipal;
 
 import java.awt.*;
@@ -42,7 +41,26 @@ public class ControladorPrincipal
 
     public void guardarResultadoControlador()
     {
+        String nombreJ1 = triqui.getJugadores().get(0).getNombre();
+        String nombreJ2 = triqui.getJugadores().get(1).getNombre();;
+        String nombreGanador = triqui.darNombreGanador();
 
+        Historial_partidasDTO historialPartidasDto = new Historial_partidasDTO(nombreJ1, nombreJ2, nombreGanador);
+        Historial_partidasDAO historialPartidasDao = new Historial_partidasDAO();
+
+        String sql = historialPartidasDao.insert(historialPartidasDto);
+
+        boolean centinela = ConexionBD.getInstance().runExecuteUpdate(sql);
+
+        if(centinela)
+        {
+            interfazPrincipal.ventanaInformacionBD("Se ha guardado correctamente", "Resultado conexion");
+            interfazPrincipal.getPanelOpciones().getBtnGuardarResultado().setEnabled(false);
+        }
+        else
+        {
+            interfazPrincipal.ventanaInformacionBD("No se ha podido guardar correctamente", "Resultado conexion");
+        }
     }
 
     public void nuevoJuegoControlador()

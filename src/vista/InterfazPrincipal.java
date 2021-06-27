@@ -78,6 +78,11 @@ public class InterfazPrincipal extends JFrame
         JOptionPane.showMessageDialog(null, pMensaje, "Cargar juego", JOptionPane.ERROR_MESSAGE);
     }
 
+    public void ventanaInformacionBD(String pMensaje, String pTitulo)
+    {
+        JOptionPane.showMessageDialog(null, pMensaje, pTitulo, JOptionPane.INFORMATION_MESSAGE);
+    }
+
     public void mostrarAcercaDe(String pMensaje)
     {
         JOptionPane.showMessageDialog(null, pMensaje, "Acerca de", JOptionPane.INFORMATION_MESSAGE);
